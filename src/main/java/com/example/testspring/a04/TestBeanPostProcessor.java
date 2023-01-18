@@ -26,13 +26,13 @@ public class TestBeanPostProcessor {
         // 添加解析 @Resource、@PostConstruct、@PreDestroy 注解的后处理器
         context.registerBean(CommonAnnotationBeanPostProcessor.class);
         // 添加解析 @ConfigurationProperties注解的后处理器
-        // ConfigurationPropertiesBindingPostProcessor后处理器不能像上面几种后处理器那样用context直接注册上去
-//         context.registerBean(ConfigurationPropertiesBindingPostProcessor.class);
-        // 需要反着来注册一下
+//         ConfigurationPropertiesBindingPostProcessor后处理器不能像上面几种后处理器那样用context直接注册上去
+         context.registerBean(ConfigurationPropertiesBindingPostProcessor.class);
+//        // 需要反着来注册一下
         ConfigurationPropertiesBindingPostProcessor.register(context.getDefaultListableBeanFactory());
         // ⬇️初始化容器
         context.refresh();
-        System.out.println(context.getBean(Bean4.class));
+        System.out.println("bean4 : " + context.getBean(Bean4.class));
         // ⬇️销毁容器
         context.close();
     }

@@ -28,7 +28,7 @@ public class Bean1 {
     private String home;
 
     @Autowired
-    public void autowire(@Value("${JAVA_HOME}") String home){
+    public void autowire(@Value("${java.home}") String home){
         System.out.println("@Value done");
         this.home = home;
     }
