@@ -38,6 +38,10 @@ public class MapperPostProcessor implements BeanDefinitionRegistryPostProcessor 
                 AbstractBeanDefinition nameBeanDefinition = BeanDefinitionBuilder.genericBeanDefinition(classMetadata.getClassName()).getBeanDefinition();
 
                 String beanName = generator.generateBeanName(nameBeanDefinition, beanFactory);
+
+                // beanName:  mapper1   className:  com.example.testspring.a05.mapper.Mapper1
+                System.out.println("beanName:  " + beanName +  "   className:  " + classMetadata.getClassName());
+
                 beanFactory.registerBeanDefinition(beanName, beanDefinition);
             }
         }
