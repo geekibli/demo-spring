@@ -8,6 +8,7 @@ import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.config.EmbeddedValueResolver;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
+import org.springframework.core.MethodParameter;
 import org.springframework.core.env.StandardEnvironment;
 
 import java.lang.reflect.Field;
@@ -22,7 +23,7 @@ public class BigInAutowired {
     public static void main(String[] args) throws Throwable {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
-        beanFactory.registerSingleton("bean2", new Bean2());
+//        beanFactory.registerSingleton("bean2", new Bean2());
         beanFactory.registerSingleton("bean3", new Bean3());
         // 解析@Value
         beanFactory.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
@@ -49,10 +50,16 @@ public class BigInAutowired {
         System.out.println("bean1 : " + bean1);
 
         // 按照类型查找属性值
+        // 属性上面添加@Autowired
         Field bean3 = Bean1.class.getDeclaredField("bean3");
         DependencyDescriptor dd1 = new DependencyDescriptor(bean3, false);
         Object o = beanFactory.doResolveDependency(dd1, null, null, null);
         System.out.println(o);
 
+        // 方法上面添加@Autowired
+        Method setBean2 = Bean1.class.getDeclaredMethod("setBean2", Bean2.class);
+        DependencyDescriptor dd2 = new DependencyDescriptor(new MethodParameter(setBean2, 0), true);
+        Object o1 = beanFactory.doResolveDependency(dd2, null, null, null);
+        System.out.println(o1);
     }
 }
