@@ -1,29 +1,25 @@
 package com.example.testspring.a05;
 
 import lombok.SneakyThrows;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.BeanDefinitionDefaults;
-import org.springframework.context.annotation.AnnotationBeanNameGenerator;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.type.MethodMetadata;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
-import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-public class A05Application {
-    @SneakyThrows
-    public static void main(String[] args) {
-        GenericApplicationContext context = new GenericApplicationContext();
-        context.registerBean("config", Config.class);
+public class AtBeanPostProcessor implements BeanFactoryPostProcessor {
 
+    @SneakyThrows
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
         // 先读取class配置类的信息
         CachingMetadataReaderFactory factory = new CachingMetadataReaderFactory();
         MetadataReader reader = factory.getMetadataReader(new ClassPathResource("com/example/testspring/a05/Config.class"));
@@ -44,17 +40,13 @@ public class A05Application {
                 builder.setInitMethodName(initMethod);
             }
 
-            // 拿到bean定义
-            AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
-            context.getDefaultListableBeanFactory().registerBeanDefinition(metadata.getMethodName(), beanDefinition);
+            if (configurableListableBeanFactory instanceof DefaultListableBeanFactory) {
+                DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) configurableListableBeanFactory;
+
+                // 拿到bean定义
+                AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
+                beanFactory.registerBeanDefinition(metadata.getMethodName(), beanDefinition);
+            }
         }
-
-        context.refresh();
-
-        for (String name : context.getBeanDefinitionNames()) {
-            System.out.println("name : " + name);
-        }
-
-        context.close();
     }
 }
