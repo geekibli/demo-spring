@@ -1,11 +1,11 @@
 package com.example.testspring.a05;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.example.testspring.a05.mapper.Mapper1;
-import com.example.testspring.a05.mapper.Mapper2;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.mapper.MapperFactoryBean;
+//import com.alibaba.druid.pool.DruidDataSource;
+//import com.example.testspring.a05.mapper.Mapper1;
+//import com.example.testspring.a05.mapper.Mapper2;
+//import org.apache.ibatis.session.SqlSessionFactory;
+//import org.mybatis.spring.SqlSessionFactoryBean;
+//import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -30,19 +30,19 @@ public class Config {
 //        return new Bean3();
 //    }
 
-    @Bean
-    public SqlSessionFactoryBean sqlSessionFactoryBean (DataSource dataSource) {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataSource);
-        return sqlSessionFactoryBean;
-    }
-
-
-    @Bean
-    public DataSource dataSource(){
-        DruidDataSource dataSource = new DruidDataSource();
-        return dataSource;
-    }
+//    @Bean
+//    public SqlSessionFactoryBean sqlSessionFactoryBean (DataSource dataSource) {
+//        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+//        sqlSessionFactoryBean.setDataSource(dataSource);
+//        return sqlSessionFactoryBean;
+//    }
+//
+//
+//    @Bean
+//    public DataSource dataSource(){
+//        DruidDataSource dataSource = new DruidDataSource();
+//        return dataSource;
+//    }
 
 //    @Bean
 //    MapperFactoryBean<Mapper1> mapper1 (SqlSessionFactory sqlSessionFactory) {

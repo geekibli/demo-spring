@@ -1,7 +1,7 @@
 package com.example.testspring.a05;
 
 import lombok.SneakyThrows;
-import org.mybatis.spring.mapper.MapperFactoryBean;
+//import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.*;
@@ -23,28 +23,28 @@ public class MapperPostProcessor implements BeanDefinitionRegistryPostProcessor 
 
         AnnotationBeanNameGenerator generator = new AnnotationBeanNameGenerator();
 
-        for (Resource resource :  resources) {
-            MetadataReader reader = factory.getMetadataReader(resource);
-            ClassMetadata classMetadata = reader.getClassMetadata();
-            if (classMetadata.isInterface()) {
-
-                // 定义beanDefinition
-
-                AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(MapperFactoryBean.class)
-                        .addConstructorArgValue(classMetadata.getClassName())
-                        .setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE)
-                        .getBeanDefinition();
-
-                AbstractBeanDefinition nameBeanDefinition = BeanDefinitionBuilder.genericBeanDefinition(classMetadata.getClassName()).getBeanDefinition();
-
-                String beanName = generator.generateBeanName(nameBeanDefinition, beanFactory);
-
-                // beanName:  mapper1   className:  com.example.testspring.a05.mapper.Mapper1
-                System.out.println("beanName:  " + beanName +  "   className:  " + classMetadata.getClassName());
-
-                beanFactory.registerBeanDefinition(beanName, beanDefinition);
-            }
-        }
+//        for (Resource resource :  resources) {
+//            MetadataReader reader = factory.getMetadataReader(resource);
+//            ClassMetadata classMetadata = reader.getClassMetadata();
+//            if (classMetadata.isInterface()) {
+//
+//                // 定义beanDefinition
+//
+//                AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(MapperFactoryBean.class)
+//                        .addConstructorArgValue(classMetadata.getClassName())
+//                        .setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE)
+//                        .getBeanDefinition();
+//
+//                AbstractBeanDefinition nameBeanDefinition = BeanDefinitionBuilder.genericBeanDefinition(classMetadata.getClassName()).getBeanDefinition();
+//
+//                String beanName = generator.generateBeanName(nameBeanDefinition, beanFactory);
+//
+//                // beanName:  mapper1   className:  com.example.testspring.a05.mapper.Mapper1
+//                System.out.println("beanName:  " + beanName +  "   className:  " + classMetadata.getClassName());
+//
+//                beanFactory.registerBeanDefinition(beanName, beanDefinition);
+//            }
+//        }
 
     }
 
