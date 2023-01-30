@@ -10,6 +10,9 @@ import javax.annotation.PreDestroy;
 public class BeanForApplication {
 
 
+    /**
+     * 按说是在Tomcat停止是 销毁 打印这个方法
+     */
     @PreDestroy
     public void destroy(){
         System.out.println("BeanForApplication destroy ... ");
