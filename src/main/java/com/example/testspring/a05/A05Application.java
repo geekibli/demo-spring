@@ -23,7 +23,6 @@ public class A05Application {
     public static void main(String[] args) {
         GenericApplicationContext context = new GenericApplicationContext();
         context.registerBean("config", Config.class);
-
         // 先读取class配置类的信息
         CachingMetadataReaderFactory factory = new CachingMetadataReaderFactory();
         MetadataReader reader = factory.getMetadataReader(new ClassPathResource("com/example/testspring/a05/Config.class"));
