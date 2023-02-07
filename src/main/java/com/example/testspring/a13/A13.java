@@ -95,7 +95,6 @@ public class A13 {
 
 
         // Method 静态，不用每次都重新获取
-
     }
 
 }
