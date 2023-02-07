@@ -1,7 +1,7 @@
 package com.example.testspring.a13;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
 
 /**
  * @Author gaolei
@@ -17,6 +17,18 @@ public class $Proxy0 implements A13.Foo {
         this.invocationHandler = invocationHandler;
     }
 
+    static Method foo;
+    static Method bar;
+
+    static {
+        try {
+            foo = A13.Foo.class.getMethod("foo");
+            bar = A13.Foo.class.getMethod("bar");
+        } catch (NoSuchMethodException e) {
+            throw new NoSuchMethodError(e.getMessage());
+        }
+    }
+
     // 代理对象和实际对象需要实现共同的接口
     @Override
     public void foo() {
@@ -29,25 +41,28 @@ public class $Proxy0 implements A13.Foo {
         //this.invocationHandler.invoke();
 
 
-        Method foo = null;
         try {
-            foo = A13.Foo.class.getMethod("foo");
-            invocationHandler.invoke(foo, new Object[0]);
+            invocationHandler.invoke(this, foo, new Object[0]);
+
+        } catch (RuntimeException | Error e) {
+            throw e;
         } catch (Throwable e) {
-            e.printStackTrace();
+            throw new UndeclaredThrowableException(e);
         }
 
     }
 
 
     @Override
-    public void bar() {
-        Method bar = null;
+    public int bar() {
         try {
-            bar = A13.Foo.class.getMethod("bar");
-            invocationHandler.invoke(bar, new Object[0]);
+            // 不用每次调用方法都获取
+            return (int) invocationHandler.invoke(this, bar, new Object[0]);
+
+        } catch (RuntimeException | Error e) {
+            throw e;
         } catch (Throwable e) {
-            e.printStackTrace();
+            throw new UndeclaredThrowableException(e);
         }
     }
 }
