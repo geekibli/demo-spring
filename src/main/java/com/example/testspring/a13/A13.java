@@ -16,7 +16,7 @@ public class A13 {
     interface Foo {
         void foo();
 
-        void bar();
+        int bar();
     }
 
 
@@ -27,8 +27,9 @@ public class A13 {
         }
 
         @Override
-        public void bar() {
+        public int bar() {
             System.out.println("A13#Target#bar ...");
+            return 100;
         }
     }
 
@@ -40,7 +41,7 @@ public class A13 {
         /**
          * 到底调用那个方法
          */
-        void invoke(Method method, Object [] args) throws Throwable;
+        Object invoke(Object proxy , Method method, Object [] args) throws Throwable;
     }
 
     /**
@@ -58,11 +59,13 @@ public class A13 {
 
         Foo proxy1 = new $Proxy0(new InvocationHandler() {
             @Override
-            public void invoke(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 System.out.println("before. ... ");
-                method.invoke(new Target(), args);
+                Object invoke = method.invoke(new Target(), args);
+                return invoke;
             }
-        });
+        }
+        );
         proxy1.foo();
         proxy1.bar();
 
@@ -76,6 +79,15 @@ public class A13 {
         //before. ...
         //A13#Target#bar ...
 
+
+        // Object invoke(Object proxy , Method method, Object [] args) throws Throwable;
+        // 支持返回值
+
+
+        // 异常的处理
+
+
+        // Method 静态，不用每次都重新获取
 
     }
 
