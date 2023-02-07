@@ -1,14 +1,21 @@
 package com.example.testspring.a13;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
  * @Author gaolei
  * @Date 2023/2/7 下午11:09
  * @Version 1.0
+ *
+ * https://www.bilibili.com/video/BV1P44y1N7QG/?p=38&spm_id_from=pageDriver&vd_source=3ff1db20d26ee8426355e893ae553d51
+ *
  */
 public class A13 {
+
+    /**
+     * jdk动态代理没有经历源码 .java 到字节码的编译阶段 .class
+     * 生成的代理类直接就是 .class  底层是通过asm实现的
+     */
 
     /**
      * 多个方法
