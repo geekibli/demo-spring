@@ -55,6 +55,18 @@ public class A15_1 {
         System.out.println(proxy.getClass().getName());
         proxy.foo();
         proxy.bar();
+
+
+        /**
+         *
+         *  private boolean proxyTargetClass = false;
+         *
+         *  proxyTargetClass = false , 实现了接口， 使用jdk
+         *  proxyTargetClass = false , 没实现接口， 使用cglib
+         *  proxyTargetClass = true , 使用cglib
+         *
+         *
+         */
     }
 
 
