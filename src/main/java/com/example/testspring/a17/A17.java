@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ConfigurationClassPostProcessor;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.annotation.Order;
 
 /**
  * <a href="https://www.bilibili.com/video/BV1P44y1N7QG?p=50&vd_source=3ff1db20d26ee8426355e893ae553d51">...</a>
@@ -68,6 +69,7 @@ public class A17 {
      * 高级切面里面可以有多个通知
      */
     @Aspect
+    @Order(1)
     static class Aspect1 {
 
         /**
@@ -95,7 +97,9 @@ public class A17 {
         public Advisor advisor3(MethodInterceptor advice3){
             AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
             pointcut.setExpression("execution(* foo())");
-            return new DefaultPointcutAdvisor(pointcut, advice3); // 传入 切点 和通知 参数
+            DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(pointcut, advice3);
+            advisor.setOrder(2);
+            return advisor; // 传入 切点 和通知 参数
         }
 
         /**
@@ -120,5 +124,31 @@ public class A17 {
 
     }
 
+    /**
+     *
+     * https://www.bilibili.com/video/BV1P44y1N7QG?p=54
+     *
+     * @Order 和 @Bean 不起作用
+     *
+     *          @Bean
+     *         public Advisor advisor3(MethodInterceptor advice3){
+     *             AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+     *             pointcut.setExpression("execution(* foo())");
+     *             DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(pointcut, advice3);
+     *             advisor.setOrder(2);
+     *             return advisor; // 传入 切点 和通知 参数
+     *         }
+     *
+     * @Order 加载高级切面的通知上 不起作用
+     *  也就是加载方法上不起作用，必须要加载class上
+     *
+     *          @Order(2)
+     *         @Before("execution(* foo())")
+     *         public void before (){
+     *             System.out.println("Aspect1 before ...");
+     *         }
+     *
+     *          不起作用
+     */
 
 }
