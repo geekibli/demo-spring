@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * <a href="https://www.bilibili.com/video/BV1P44y1N7QG?p=65">...</a>
@@ -59,6 +60,15 @@ public class WebConfig {
         // 在tomcat启动时，初始化DispatcherServlet
         registrationBean.setLoadOnStartup(loadOnStartup);
         return registrationBean;
+    }
+
+    /**
+     * 如果是默认的策略，RequestMappingHandlerMapping会被设置到DispatcherServlet的一个属性上，并不会被加入到容器中，所以在这里自己注入bean
+     * @return
+     */
+    @Bean
+    public RequestMappingHandlerMapping requestMappingHandlerMapping (){
+        return new RequestMappingHandlerMapping();
     }
 
 }
