@@ -1,11 +1,20 @@
 package com.example.testspring.a18;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.annotation.*;
 import org.springframework.aop.Advisor;
+import org.springframework.aop.AfterAdvice;
+import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.aspectj.*;
 import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.framework.ReflectiveMethodInvocation;
+import org.springframework.aop.framework.adapter.AfterReturningAdviceInterceptor;
+import org.springframework.aop.interceptor.ExposeInvocationInterceptor;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.util.Assert;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +112,25 @@ public class A18 {
         }
 
 
+
+        /**
+         *
+
+         无论ProxyFactory 基于那种方式创建代理，最终干活的都是一个 MethodInvocation 对象
+         1. 因为 advisor 由多个 ，且一个套一个的调用，因此需要一个调用链对象，也就是 MethodInvocation
+         2. MethodInvocation 要知道 advice 有哪些， 还要知道目标，调用次序如下：
+
+         before1 ---------------------------------------------------------------｜
+         before2 -------------------------------------------------｜        ｜
+         target  ---------------------------- 目标          advice2     advice1
+         after2 --------------------------------------------------｜        ｜
+         after1 ----------------------------------------------------------------｜
+
+         将 methodInvocation 放入当前线程，threadLocak , 因为有的advise需要用到
+         *
+         */
+
+
 //        AspectJAroundAdvice
 
 //        AspectJAfterAdvice
@@ -115,8 +143,10 @@ public class A18 {
 
 
         //
+        Target1 target = new Target1();
         ProxyFactory proxyFactory = new ProxyFactory();
-        proxyFactory.setTarget(new Target1());
+        proxyFactory.setTarget(target);
+        proxyFactory.addAdvice(ExposeInvocationInterceptor.INSTANCE);
         proxyFactory.addAdvisors(advisorList);
 
         System.out.println(">>>>>>>>>>>>>>>>");
@@ -133,6 +163,33 @@ public class A18 {
 //        org.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor@343f4d3d
 //        org.springframework.aop.aspectj.AspectJAroundAdvice: advice method [public void com.example.testspring.a18.A18$Aspect.Around()]; aspect name ''
 //        org.springframework.aop.framework.adapter.AfterReturningAdviceInterceptor@53b32d7
+
+
+        // 适配器模式
+//         AfterReturningAdviceInterceptor
+
+        class AfterReturningAdviceInterceptor implements MethodInterceptor, AfterAdvice, Serializable {
+            private final AfterReturningAdvice advice;
+
+            public AfterReturningAdviceInterceptor(AfterReturningAdvice advice) {
+                Assert.notNull(advice, "Advice must not be null");
+                this.advice = advice;
+            }
+
+            public Object invoke(MethodInvocation mi) throws Throwable {
+                Object retVal = mi.proceed();
+                this.advice.afterReturning(retVal, mi.getMethod(), mi.getArguments(), mi.getThis());
+                return retVal;
+            }
+        }
+
+        // 3. 创建并执行调用链路 （环绕通知，目标）
+        // https://www.bilibili.com/video/BV1P44y1N7QG?p=59
+        // protected
+//        MethodInvocation methodInvocation = new ReflectiveMethodInvocation(
+//                null, target, target.getClass().getMethod("foo"), new Object[0] , Target1.class, advisorList
+//        );
+//        methodInvocation.proceed();
 
     }
 }
