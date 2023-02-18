@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
+import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,21 @@ public class A17 {
         context.registerBean("config", Config.class);
 
         context.registerBean(ConfigurationClassPostProcessor.class);
+
+        /**
+         * beanPostProcessor
+         * 创建   (扩展 创建代理) 依赖注入  初始化 （创建代理）
+         *
+         * AnnotationAwareAspectJAutoProxyCreator 收集所有的高级代理aspect 和 低级代理advisor , 最终 把aspect 转换成 advisor
+         *
+         *  具体方法：
+         *  isEligibleAspectBean
+         *  findCandidateAdvisors
+         *
+         *  wrapIfNecessary() 创建代理对象
+         *  org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#wrapIfNecessary(java.lang.Object, java.lang.String, java.lang.Object)
+         */
+        context.registerBean(AnnotationAwareAspectJAutoProxyCreator.class);
 
         context.refresh();
 
@@ -54,6 +70,10 @@ public class A17 {
     @Aspect
     static class Aspect1 {
 
+        /**
+         * <a href="https://www.bilibili.com/video/BV1P44y1N7QG?p=51&spm_id_from=pageDriver&vd_source=3ff1db20d26ee8426355e893ae553d51">...</a>
+         * 最终会转换成一个advisor  低级切面
+         */
         @Before("execution(* foo())")
         public void before (){
             System.out.println("Aspect1 before ...");
